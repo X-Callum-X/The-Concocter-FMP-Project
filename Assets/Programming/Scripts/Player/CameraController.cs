@@ -68,8 +68,5 @@ public class CameraController : MonoBehaviour
                 thisCamera.fieldOfView = maxFOV;
             }
         }
-
-        Debug.Log(thisCamera.orthographic);
-        Debug.Log(thisCamera.fieldOfView);
     }
 }
