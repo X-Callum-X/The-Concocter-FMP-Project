@@ -1,72 +1,78 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    [SerializeField] private float mouseSensitivity = 3.0f;
+    [Header("References")]
+    public Transform orientation;
+    public Transform player;
+    public Transform playerObj;
+    public Rigidbody rb;
 
-    [SerializeField] private Transform targetToFollow;
+    public float rotationSpeed;
 
-    [SerializeField] private float distanceFromTarget = 3.0f;
+    public Transform combatLookAt;
 
-    [SerializeField] private float smoothTime = 0.2f;
+    public GameObject thirdPersonCam;
+    public GameObject combatCam;
 
-    [SerializeField] private Vector2 rotationLimit = new Vector2(-40, 40);
+    public CameraStyle currentStyle;
 
-    public Camera thisCamera;
-    public float scrollSpeed = 10;
-
-    public float minFOV = 30;
-    public float maxFOV = 100;
-
-    private float rotY;
-    private float rotX;
-
-    private Vector3 currentRotation;
-    private Vector3 smoothVelocity = Vector3.zero;
-
-    void Update()
+    public enum CameraStyle
     {
-        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
-        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity;
-
-        rotY += mouseX;
-        rotX += mouseY;
-
-        rotX = Mathf.Clamp(rotX, rotationLimit.x, rotationLimit.y);
-
-        // Controls the camera's actual rotation. Set rotX to positive to invert camera rotation on the x axis
-        Vector3 nextRotation = new Vector3(-rotX, rotY);
-
-        currentRotation = Vector3.SmoothDamp(currentRotation, nextRotation, ref smoothVelocity, smoothTime);
-        transform.localEulerAngles = currentRotation;
-
-        transform.position = targetToFollow.position - transform.forward * distanceFromTarget;
-
-        CameraZoom();
+        Basic,
+        Combat,
     }
 
-    private void CameraZoom()
+    private void Start()
     {
-        if (thisCamera.orthographic)
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
+        combatCam.SetActive(true);
+    }
+
+    private void Update()
+    {
+        // switch styles
+        if (Input.GetKeyDown(KeyCode.Alpha1)) SwitchCameraStyle(CameraStyle.Basic);
+        if (Input.GetKeyDown(KeyCode.Alpha2)) SwitchCameraStyle(CameraStyle.Combat);
+
+        // rotate orientation
+        Vector3 viewDir = player.position - new Vector3(transform.position.x, player.position.y, transform.position.z);
+        orientation.forward = viewDir.normalized;
+
+        // roate player object
+        if(currentStyle == CameraStyle.Basic)
         {
-            thisCamera.orthographicSize -= Input.GetAxis("Mouse ScrollWheel") * scrollSpeed;
+            float horizontalInput = Input.GetAxis("Horizontal");
+            float verticalInput = Input.GetAxis("Vertical");
+            Vector3 inputDir = orientation.forward * verticalInput + orientation.right * horizontalInput;
+
+            if (inputDir != Vector3.zero)
+                playerObj.forward = Vector3.Slerp(playerObj.forward, inputDir.normalized, Time.deltaTime * rotationSpeed);
         }
-        else
+
+        else if(currentStyle == CameraStyle.Combat)
         {
-            if (thisCamera.fieldOfView >= minFOV && thisCamera.fieldOfView <= maxFOV)
-            {
-                thisCamera.fieldOfView -= Input.GetAxis("Mouse ScrollWheel") * scrollSpeed;
-            }
-            else if (thisCamera.fieldOfView < minFOV)
-            {
-                thisCamera.fieldOfView = minFOV;
-            }
-            else if (thisCamera.fieldOfView > maxFOV)
-            {
-                thisCamera.fieldOfView = maxFOV;
-            }
+            Vector3 dirToCombatLookAt = combatLookAt.position - new Vector3(transform.position.x, combatLookAt.position.y, transform.position.z);
+            orientation.forward = dirToCombatLookAt.normalized;
+
+            playerObj.forward = dirToCombatLookAt.normalized;
         }
+    }
+
+    private void SwitchCameraStyle(CameraStyle newStyle)
+    {
+        combatCam.SetActive(false);
+        thirdPersonCam.SetActive(false);
+
+        if (newStyle == CameraStyle.Basic) thirdPersonCam.SetActive(true);
+        if (newStyle == CameraStyle.Combat) combatCam.SetActive(true);
+
+        currentStyle = newStyle;
     }
 }
+
