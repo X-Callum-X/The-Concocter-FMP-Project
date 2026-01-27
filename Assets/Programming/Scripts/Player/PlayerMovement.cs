@@ -1,129 +1,117 @@
-using TMPro;
+using System;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [Header("References")]
+    [Header("Movement")]
+    public float moveSpeed;
 
-    [SerializeField] private Camera followCamera;
+    public float groundDrag;
 
-    private CharacterController playerController;
+    public float jumpForce;
+    public float jumpCooldown;
+    public float airMultiplier;
+    bool readyToJump;
 
-    [Header("Variables")]
+    [HideInInspector] public float walkSpeed;
+    [HideInInspector] public float sprintSpeed;
 
-    public int health;
+    [Header("Keybinds")]
+    public KeyCode jumpKey = KeyCode.Space;
 
-    private float healTimer = 0;
+    [Header("Ground Check")]
+    public float playerHeight;
+    public LayerMask whatIsGround;
+    bool grounded;
 
-    public float currentMoveSpeed = 5f;
-    public float originalMoveSpeed = 5f;
-    public float jumpHeight = 1.0f;
+    public Transform orientation;
 
-    [SerializeField] private float rotationSpeed = 10f;
-    [SerializeField] private float gravity = -9.81f;
+    float horizontalInput;
+    float verticalInput;
 
-    private Vector3 moveDirection;
-    private bool isGrounded;
-    private bool isRunning = false;
+    Vector3 moveDirection;
 
-    [Header("Respawning")]
-    public Vector3 placeToRespawn;
+    Rigidbody rb;
 
     private void Start()
     {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        rb = GetComponent<Rigidbody>();
+        rb.freezeRotation = true;
 
-        playerController = GetComponent<CharacterController>();
+        readyToJump = true;
     }
 
     private void Update()
     {
-        Movement();
+        // ground check
+        grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.3f, whatIsGround);
 
-        if (transform.position.y <= -10 || health <= 0)
+        MyInput();
+        SpeedControl();
+
+        // handle drag
+        if (grounded)
+            rb.linearDamping = groundDrag;
+        else
+            rb.linearDamping = 0;
+    }
+
+    private void FixedUpdate()
+    {
+        MovePlayer();
+    }
+
+    private void MyInput()
+    {
+        horizontalInput = Input.GetAxisRaw("Horizontal");
+        verticalInput = Input.GetAxisRaw("Vertical");
+
+        // when to jump
+        if(Input.GetKey(jumpKey) && readyToJump && grounded)
         {
-            Die();
-        }
+            readyToJump = false;
 
-        if (health < 5)
-        {
-            healTimer += Time.deltaTime;
+            Jump();
 
-            if (healTimer >= 5)
-            {
-                health += 1;
-                healTimer = 0;
-            }
+            Invoke(nameof(ResetJump), jumpCooldown);
         }
     }
 
-    void Movement()
+    private void MovePlayer()
     {
-        isGrounded = playerController.isGrounded;
+        // calculate movement direction
+        moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
 
-        if (isGrounded && moveDirection.y < 0)
-        {
-            moveDirection.y = 0f;
-        }
+        // on ground
+        if(grounded)
+            rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
 
-        bool pressingShift = Input.GetKey(KeyCode.LeftShift);
-        float horizontalInput = Input.GetAxisRaw("Horizontal");
-        float verticalInput = Input.GetAxisRaw("Vertical");
-
-        Vector3 movementInput = Quaternion.Euler(0, followCamera.transform.eulerAngles.y, 0) * new Vector3(horizontalInput, 0, verticalInput);
-        Vector3 movementDirection = movementInput;
-
-        playerController.Move(movementDirection.normalized * currentMoveSpeed * Time.deltaTime);
-
-        if (pressingShift && !isRunning)
-        {
-            currentMoveSpeed *= 1.5f;
-            isRunning = true;
-        }
-        else if (!pressingShift)
-        {
-            currentMoveSpeed = originalMoveSpeed;
-            isRunning = false;
-        }
-
-        if (movementDirection != Vector3.zero)
-        {
-            Quaternion desiredRotation = Quaternion.LookRotation(movementDirection, Vector3.up);
-
-            transform.rotation = Quaternion.Slerp(transform.rotation, desiredRotation, rotationSpeed * Time.deltaTime);
-        }
-
-        if (Input.GetButton("Jump") && isGrounded)
-        {
-            moveDirection.y += Mathf.Sqrt(jumpHeight * -3.0f * gravity);
-        }
-
-        if (!isGrounded)
-        {
-            moveDirection.y += gravity * Time.deltaTime;
-        }
-
-        playerController.Move(moveDirection * Time.deltaTime);
+        // in air
+        else if(!grounded)
+            rb.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
     }
 
-    public void TakeDamage(int damage)
+    private void SpeedControl()
     {
-        health -= damage;
-        healTimer = 0;
+        Vector3 flatVel = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
 
-        if (health <= 0)
+        // limit velocity if needed
+        if(flatVel.magnitude > moveSpeed)
         {
-            Die();
+            Vector3 limitedVel = flatVel.normalized * moveSpeed;
+            rb.linearVelocity = new Vector3(limitedVel.x, rb.linearVelocity.y, limitedVel.z);
         }
     }
 
-    private void Die()
+    private void Jump()
     {
-        playerController.enabled = false;
-        transform.position = placeToRespawn;
-        playerController.enabled = true;
+        // reset y velocity
+        rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
 
-        health = 5;
+        rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+    }
+    private void ResetJump()
+    {
+        readyToJump = true;
     }
 }
