@@ -185,7 +185,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyMovement
   player: {fileID: 1137268315}
-  speed: 0.1
+  speed: 3
   minDistFromPlayer: 2
 --- !u!135 &167692846
 SphereCollider:
@@ -1517,10 +1517,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   moveSpeed: 10
-  groundDrag: 2
-  jumpForce: 15
+  groundDrag: 10
+  jumpForce: 20
   jumpCooldown: 1
-  airMultiplier: 1
+  airMultiplier: 5
   walkSpeed: 0
   sprintSpeed: 0
   jumpKey: 32

@@ -12,5 +12,14 @@ public class EnemyMovement : MonoBehaviour
         {
             transform.position = Vector3.MoveTowards(transform.position, player.position, speed * Time.deltaTime);
         }
+
+        LookAtPlayer(player.position);
+    }
+
+    private void LookAtPlayer(Vector3 lookAt)
+    {
+        Quaternion lookRotation = Quaternion.LookRotation((lookAt - transform.position).normalized);
+
+        transform.rotation = lookRotation;
     }
 }
