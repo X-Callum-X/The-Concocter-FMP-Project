@@ -51,7 +51,7 @@ public class PlayerMovement : MonoBehaviour
         // ground check
         grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.3f, whatIsGround);
 
-        MyInput();
+        PlayerInput();
         SpeedControl();
 
         // handle drag
@@ -64,21 +64,24 @@ public class PlayerMovement : MonoBehaviour
     private void FixedUpdate()
     {
         MovePlayer();
+
+        if (!canJump)
+        {
+            Jump();
+
+            Invoke(nameof(ResetJump), jumpCooldown);
+        }
     }
 
-    private void MyInput()
+    private void PlayerInput()
     {
         horizontalInput = Input.GetAxisRaw("Horizontal");
         verticalInput = Input.GetAxisRaw("Vertical");
 
         // when to jump
-        if (Input.GetKey(jumpKey) && canJump && grounded)
+        if (Input.GetKeyDown(jumpKey) && canJump && grounded)
         {
             canJump = false;
-
-            Jump();
-
-            Invoke(nameof(ResetJump), jumpCooldown);
         }
     }
 
@@ -93,7 +96,7 @@ public class PlayerMovement : MonoBehaviour
 
         // in air
         else if (!grounded)
-            rb.AddForce(moveDirection.normalized * moveSpeed * airMultiplier, ForceMode.Force);
+            rb.AddForce(moveDirection.normalized * moveSpeed * 3f, ForceMode.Force);
     }
 
     private void SpeedControl()
