@@ -1,4 +1,5 @@
 using UnityEngine;
+using TMPro;
 
 public class PlayerGrappling : MonoBehaviour
 {
@@ -7,11 +8,15 @@ public class PlayerGrappling : MonoBehaviour
     public Transform gunTip, cam, player;
     public LayerMask whatIsGrappleable;
     public PlayerMovement pm;
+    public TMP_Text grappleNoUI;
 
     [Header("Swinging")]
     private float maxSwingDistance = 25f;
     private Vector3 swingPoint;
     private SpringJoint joint;
+
+    public float maxNoOfGrapples = 1;
+    public float currentGrappleNo = 0;
 
     [Header("OdmGear")]
     public Transform orientation;
@@ -27,10 +32,16 @@ public class PlayerGrappling : MonoBehaviour
     [Header("Input")]
     public KeyCode swingKey = KeyCode.Mouse0;
 
+    private void Start()
+    {
+        currentGrappleNo = maxNoOfGrapples;
+
+        grappleNoUI.text = "Number Of Grapples: " + currentGrappleNo;
+    }
 
     private void Update()
     {
-        if (Input.GetKeyDown(swingKey)) StartSwing();
+        if (Input.GetKeyDown(swingKey) && currentGrappleNo > 0) StartSwing();
         if (Input.GetKeyUp(swingKey)) StopSwing();
 
         CheckForSwingPoints();
@@ -87,6 +98,13 @@ public class PlayerGrappling : MonoBehaviour
 
     private void StartSwing()
     {
+        currentGrappleNo -= 1;
+
+        if (!pm.grounded)
+        {
+            grappleNoUI.text = "Number Of Grapples: " + currentGrappleNo;
+        }
+
         // return if predictionHit not found
         if (predictionHit.point == Vector3.zero) return;
 
