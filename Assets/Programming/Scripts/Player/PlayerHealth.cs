@@ -17,7 +17,10 @@ public class PlayerHealth : MonoBehaviour
     {
         currentHealth = maxHealth;
 
-        healthUI.text = "Player Health: " + currentHealth.ToString();
+        if (healthUI != null)
+        {
+            healthUI.text = "Player Health: " + currentHealth.ToString();
+        }
     }
 
     private void Update()

@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    private PlayerGrappling grappling;
+
     [Header("Movement")]
     public float moveSpeed;
 
@@ -22,7 +24,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("Ground Check")]
     public float playerHeight;
     public LayerMask whatIsGround;
-    bool grounded;
+    [HideInInspector] public bool grounded;
 
     public Transform orientation;
 
@@ -37,6 +39,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void Start()
     {
+        grappling = GetComponent<PlayerGrappling>();
+
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
 
@@ -56,7 +60,13 @@ public class PlayerMovement : MonoBehaviour
 
         // handle drag
         if (grounded)
+        {
             rb.linearDamping = groundDrag;
+            grappling.currentGrappleNo = grappling.maxNoOfGrapples;
+
+            grappling.grappleNoUI.text = "Number Of Grapples: " + grappling.currentGrappleNo;
+        }
+
         else
             rb.linearDamping = 0;
     }
