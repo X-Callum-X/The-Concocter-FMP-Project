@@ -1,22 +1,18 @@
 using UnityEngine;
 using TMPro;
 
-public class EnemyHealth : MonoBehaviour
+public class EnemyHealth : MonoBehaviour, IDamagable
 {
     private float currentHealth = 0;
     private float maxHealth = 100;
 
     [HideInInspector] public float damage = 10;
 
-    public TMP_Text healthUI;
-
     public PlayerHealth player;
 
     private void Start()
     {
         currentHealth = maxHealth;
-
-        healthUI.text = "Enemy Health: " + currentHealth.ToString();
     }
 
     private void Update()
@@ -27,13 +23,11 @@ public class EnemyHealth : MonoBehaviour
         }
     }
 
-    private void TakeDamage()
+    private void TakeDamage(float damage)
     {
         // Called whenever the player takes any damage
 
-        currentHealth -= player.damage;
-
-        healthUI.text = "Enemy Health: " + currentHealth.ToString();
+        currentHealth -= damage;
     }
 
     private void Die()
@@ -45,9 +39,21 @@ public class EnemyHealth : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        IDamagable target = collision.gameObject.GetComponentInParent<IDamagable>();
+        
+        if (target != null)
         {
-            TakeDamage();
+            target.TakeDamage(damage);
+        }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        IDamagable target = other.gameObject.GetComponentInParent<IDamagable>();
+
+        if (target != null)
+        {
+            target.TakeDamage(damage);
         }
     }
 }

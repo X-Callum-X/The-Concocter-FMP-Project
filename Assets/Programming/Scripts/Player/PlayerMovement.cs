@@ -5,6 +5,8 @@ public class PlayerMovement : MonoBehaviour
 {
     private PlayerGrappling grappling;
 
+    public DebuffUIController debuffUI;
+
     [Header("Movement")]
     public float moveSpeed;
 
@@ -24,7 +26,10 @@ public class PlayerMovement : MonoBehaviour
     [Header("Ground Check")]
     public float playerHeight;
     public LayerMask whatIsGround;
+    public LayerMask whatIsIce;
+
     [HideInInspector] public bool grounded;
+    [HideInInspector] public bool onIce;
 
     public Transform orientation;
 
@@ -55,6 +60,8 @@ public class PlayerMovement : MonoBehaviour
         // ground check
         grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.3f, whatIsGround);
 
+        onIce = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.3f, whatIsIce);
+
         PlayerInput();
         SpeedControl();
 
@@ -68,7 +75,23 @@ public class PlayerMovement : MonoBehaviour
         }
 
         else
+        {
             rb.linearDamping = 0;
+        }
+
+        if (onIce)
+        {
+            grappling.currentGrappleNo = grappling.maxNoOfGrapples;
+
+            grappling.grappleNoUI.text = "Number Of Grapples: " + grappling.currentGrappleNo;
+
+            debuffUI.isOnIce = true;
+        }
+
+        else
+        {
+            debuffUI.isOnIce = false;
+        }
     }
 
     private void FixedUpdate()
@@ -90,6 +113,11 @@ public class PlayerMovement : MonoBehaviour
 
         // when to jump
         if (Input.GetKeyDown(jumpKey) && canJump && grounded)
+        {
+            canJump = false;
+        }
+
+        else if (Input.GetKeyDown(jumpKey) && canJump && onIce)
         {
             canJump = false;
         }

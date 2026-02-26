@@ -4,11 +4,11 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerHealth : MonoBehaviour
+public class PlayerHealth : MonoBehaviour, IDamagable
 {
     [Header("References")]
     public Slider healthSlider;
-    public TMP_Text healthUI;
+    public TMP_Text healthText;
     public EnemyHealth enemy;
 
     public DebuffUIController debuffUI;
@@ -16,8 +16,12 @@ public class PlayerHealth : MonoBehaviour
     [Header("Variables")]
     private float currentHealth = 100;
     private float maxHealth = 100;
-
+    
     [HideInInspector] public float damage = 5;
+
+    private bool Invincible = false;
+
+    private float healTimer = 0;
 
     private void Start()
     {
@@ -32,40 +36,39 @@ public class PlayerHealth : MonoBehaviour
     {
         if (currentHealth <= 0)
         {
+            currentHealth = 0;
+
+            UpdateHealthUI();
+
             Die();
         }
 
-        if (Input.GetKeyDown(KeyCode.I))
+        if (currentHealth > maxHealth) currentHealth = maxHealth;
+
+        if (currentHealth < maxHealth)
         {
-            currentHealth += 10;
+            healTimer += Time.deltaTime;
 
-            UpdateHealthUI();
-        }
+            if (healTimer >= 0.5f)
+            {
+                currentHealth += 1;
+                healTimer = 0;
 
-        if (Input.GetKeyDown(KeyCode.O))
-        {
-            currentHealth -= 10;
-
-            UpdateHealthUI();
-        }
-
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            StopAllCoroutines();
-            StartCoroutine(DamageOverTime(5, 5));
+                UpdateHealthUI();
+            }
         }
     }
 
-    private void TakeDamage()
+    public void TakeDamage(float damage)
     {
         // Called whenever the player takes any damage
 
-        currentHealth -= enemy.damage;
+        currentHealth -= damage;
 
         UpdateHealthUI();
     }
 
-    private void Die()
+    public void Die()
     {
         // Trigger what happens when the player dies
 
@@ -74,20 +77,28 @@ public class PlayerHealth : MonoBehaviour
 
     private void UpdateHealthUI()
     {
-        healthUI.text = currentHealth.ToString() + " / " + maxHealth.ToString();
+        healthText.text = currentHealth.ToString() + " / " + maxHealth.ToString();
 
         healthSlider.value = currentHealth;
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Enemy"))
+        //if (collision.gameObject.CompareTag("Enemy"))
+        //{
+        //    TakeDamage();
+        //}
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.gameObject.CompareTag("FireTrigger"))
         {
-            TakeDamage();
+            StartCoroutine(FireDamage(1, 1));
         }
     }
 
-    private IEnumerator DamageOverTime(float damageAmount, float duration)
+    private IEnumerator PoisonDamage(float damageAmount, float duration)
     {
         float amountDamaged = 0;
         float damagePerLoop = damageAmount / duration;
@@ -97,7 +108,7 @@ public class PlayerHealth : MonoBehaviour
             debuffUI.isPoisoned = true;
 
             currentHealth -= damagePerLoop;
-            Debug.Log(currentHealth.ToString());
+
             amountDamaged += damagePerLoop;
 
             UpdateHealthUI();
@@ -108,6 +119,32 @@ public class PlayerHealth : MonoBehaviour
         if (amountDamaged == damageAmount)
         {
             debuffUI.isPoisoned = false;
+        }
+    }
+
+    private IEnumerator FireDamage(float damageAmount, float duration)
+    {
+        float amountDamaged = 0;
+        float damagePerLoop = damageAmount / duration;
+
+        while (amountDamaged < damageAmount && !Invincible)
+        {
+            Invincible = true;
+            debuffUI.isOnFire = true;
+
+            currentHealth -= damagePerLoop;
+
+            amountDamaged += damagePerLoop;
+
+            UpdateHealthUI();
+
+            yield return new WaitForSeconds(0.25f);
+            Invincible = false;
+        }
+
+        if (amountDamaged == damageAmount)
+        {
+            debuffUI.isOnFire = false;
         }
     }
 }

@@ -14426,6 +14426,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 349339460}
     - target: {fileID: 522354266348481333, guid: c6eac1bc2d7ed9a499e16d613ee2ee13, type: 3}
+      propertyPath: healthText
+      value: 
+      objectReference: {fileID: 349339460}
+    - target: {fileID: 522354266348481333, guid: c6eac1bc2d7ed9a499e16d613ee2ee13, type: 3}
       propertyPath: healthSlider
       value: 
       objectReference: {fileID: 995860947}
@@ -14487,9 +14491,9 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1542921827}
-  - {fileID: 615192473}
   - {fileID: 406292114414600765}
   - {fileID: 457377162}
   - {fileID: 1129895500}
   - {fileID: 945762393}
   - {fileID: 1592941026}
+  - {fileID: 615192473}
