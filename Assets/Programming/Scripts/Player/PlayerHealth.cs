@@ -1,6 +1,6 @@
 using System.Collections;
-using System.Runtime.CompilerServices;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -22,6 +22,8 @@ public class PlayerHealth : MonoBehaviour, IDamagable
     private bool Invincible = false;
 
     private float healTimer = 0;
+
+    private bool pauseHealing = false;
 
     private void Start()
     {
@@ -45,7 +47,7 @@ public class PlayerHealth : MonoBehaviour, IDamagable
 
         if (currentHealth > maxHealth) currentHealth = maxHealth;
 
-        if (currentHealth < maxHealth)
+        if (currentHealth < maxHealth && !pauseHealing)
         {
             healTimer += Time.deltaTime;
 
@@ -66,6 +68,8 @@ public class PlayerHealth : MonoBehaviour, IDamagable
         currentHealth -= damage;
 
         UpdateHealthUI();
+
+        StartCoroutine(StopAndStartHealing());
     }
 
     public void Die()
@@ -82,20 +86,40 @@ public class PlayerHealth : MonoBehaviour, IDamagable
         healthSlider.value = currentHealth;
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        //if (collision.gameObject.CompareTag("Enemy"))
-        //{
-        //    TakeDamage();
-        //}
+        if (other.gameObject.CompareTag("Enemy"))
+        {
+            TakeDamage(10);
+        }
+
+        if (other.gameObject.CompareTag("Poison"))
+        {
+            TakeDamage(5);
+
+            StartCoroutine(PoisonDamage(10, 5));
+        }
     }
 
     private void OnTriggerStay(Collider other)
     {
         if (other.gameObject.CompareTag("FireTrigger"))
         {
-            StartCoroutine(FireDamage(1, 1));
+            StartCoroutine(FireDamage(5, 1));
         }
+    }
+
+    private IEnumerator StopAndStartHealing()
+    {
+        pauseHealing = true;
+
+        Debug.Log(pauseHealing);
+
+        yield return new WaitForSeconds(5f);
+
+        pauseHealing = false;
+
+        Debug.Log(pauseHealing);
     }
 
     private IEnumerator PoisonDamage(float damageAmount, float duration)
@@ -119,6 +143,8 @@ public class PlayerHealth : MonoBehaviour, IDamagable
         if (amountDamaged == damageAmount)
         {
             debuffUI.isPoisoned = false;
+
+            StartCoroutine(StopAndStartHealing());
         }
     }
 
@@ -145,6 +171,8 @@ public class PlayerHealth : MonoBehaviour, IDamagable
         if (amountDamaged == damageAmount)
         {
             debuffUI.isOnFire = false;
+
+            StartCoroutine(StopAndStartHealing());
         }
     }
 }
