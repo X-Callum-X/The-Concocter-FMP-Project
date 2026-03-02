@@ -29,6 +29,7 @@ public class PlayerMovement : MonoBehaviour
     public LayerMask whatIsIce;
 
     [HideInInspector] public bool grounded;
+
     [HideInInspector] public bool onIce;
 
     public Transform orientation;
@@ -58,9 +59,9 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
         // ground check
-        grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.3f, whatIsGround);
+        grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f, whatIsGround);
 
-        onIce = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.3f, whatIsIce);
+        onIce = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f, whatIsIce);
 
         PlayerInput();
         SpeedControl();
@@ -159,5 +160,11 @@ public class PlayerMovement : MonoBehaviour
     private void ResetJump()
     {
         canJump = true;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.white;
+        Gizmos.DrawWireSphere(transform.position - Vector3.up, 1);
     }
 }
