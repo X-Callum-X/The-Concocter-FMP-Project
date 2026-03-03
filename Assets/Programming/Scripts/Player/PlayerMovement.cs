@@ -157,9 +157,28 @@ public class PlayerMovement : MonoBehaviour
 
         rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
     }
+
     private void ResetJump()
     {
         canJump = true;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("PoisonTrigger"))
+        {
+            jumpForce = jumpForce / 2;
+            moveSpeed = moveSpeed / 2;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.CompareTag("PoisonTrigger"))
+        {
+            jumpForce = jumpForce * 2;
+            moveSpeed = moveSpeed * 2;
+        }
     }
 
     private void OnDrawGizmos()

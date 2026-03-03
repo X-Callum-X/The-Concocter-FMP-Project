@@ -8,6 +8,8 @@ TagManager:
   - DamageTrigger
   - FireTrigger
   - Poison
+  - DeathTrigger
+  - PoisonTrigger
   layers:
   - Default
   - TransparentFX
