@@ -3977,22 +3977,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 1286213000406703426, guid: c6eac1bc2d7ed9a499e16d613ee2ee13, type: 3}
-      propertyPath: m_Layer
-      value: 9
-      objectReference: {fileID: 0}
     - target: {fileID: 2092138621804123174, guid: c6eac1bc2d7ed9a499e16d613ee2ee13, type: 3}
       propertyPath: debuffUI
       value: 
       objectReference: {fileID: 141328611}
-    - target: {fileID: 2092138621804123174, guid: c6eac1bc2d7ed9a499e16d613ee2ee13, type: 3}
-      propertyPath: whatIsIce.m_Bits
-      value: 256
-      objectReference: {fileID: 0}
-    - target: {fileID: 5206467024995526559, guid: c6eac1bc2d7ed9a499e16d613ee2ee13, type: 3}
-      propertyPath: cameraSens
-      value: 1500
-      objectReference: {fileID: 0}
     - target: {fileID: 6665999059295451924, guid: c6eac1bc2d7ed9a499e16d613ee2ee13, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -4032,10 +4020,6 @@ PrefabInstance:
     - target: {fileID: 6665999059295451924, guid: c6eac1bc2d7ed9a499e16d613ee2ee13, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6680464137953172137, guid: c6eac1bc2d7ed9a499e16d613ee2ee13, type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
