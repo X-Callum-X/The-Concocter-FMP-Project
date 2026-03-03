@@ -5,9 +5,9 @@ public class UIController : MonoBehaviour
 {
     public void LoadScene(string sceneName)
     {
-        SceneManager.LoadScene(sceneName);
-
         Time.timeScale = 1.0f;
+
+        SceneManager.LoadScene(sceneName);
     }
 
     public void QuitGame()

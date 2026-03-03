@@ -6,6 +6,11 @@ public class PauseManager : MonoBehaviour
 
     public GameObject pauseMenuObj;
 
+    private void Start()
+    {
+        Time.timeScale = 1.0f;
+    }
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape) && !isPaused)
@@ -31,7 +36,7 @@ public class PauseManager : MonoBehaviour
 
     public void UnpauseGame()
     {
-        Time.timeScale = 1f;
+        Time.timeScale = 1.0f;
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;

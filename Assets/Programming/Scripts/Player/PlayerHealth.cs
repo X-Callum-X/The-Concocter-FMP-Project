@@ -13,6 +13,8 @@ public class PlayerHealth : MonoBehaviour, IDamagable
 
     public DebuffUIController debuffUI;
 
+    public GameObject gameOverScreen;
+
     [Header("Variables")]
     private float currentHealth = 100;
     private float maxHealth = 100;
@@ -27,6 +29,8 @@ public class PlayerHealth : MonoBehaviour, IDamagable
 
     private void Start()
     {
+        gameOverScreen.gameObject.SetActive(false);
+
         currentHealth = maxHealth;
 
         healthSlider.maxValue = maxHealth;
@@ -76,7 +80,16 @@ public class PlayerHealth : MonoBehaviour, IDamagable
     {
         // Trigger what happens when the player dies
 
-        Debug.Log("Player has died");
+        currentHealth = 0;
+
+        UpdateHealthUI();
+
+        Time.timeScale = 0;
+
+        gameOverScreen.gameObject.SetActive(true);
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
     private void UpdateHealthUI()
@@ -88,6 +101,11 @@ public class PlayerHealth : MonoBehaviour, IDamagable
 
     private void OnTriggerEnter(Collider other)
     {
+        if (other.gameObject.CompareTag("DeathTrigger"))
+        {
+            Die();
+        }
+
         if (other.gameObject.CompareTag("Enemy"))
         {
             TakeDamage(10);
@@ -113,13 +131,9 @@ public class PlayerHealth : MonoBehaviour, IDamagable
     {
         pauseHealing = true;
 
-        Debug.Log(pauseHealing);
-
         yield return new WaitForSeconds(5f);
 
         pauseHealing = false;
-
-        Debug.Log(pauseHealing);
     }
 
     private IEnumerator PoisonDamage(float damageAmount, float duration)
