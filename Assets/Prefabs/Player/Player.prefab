@@ -170,7 +170,7 @@ MonoBehaviour:
     m_Bits: 192
   pm: {fileID: 2092138621804123174}
   grappleNoUI: {fileID: 0}
-  maxNoOfGrapples: 1
+  maxNoOfGrapples: 3
   currentGrappleNo: 0
   orientation: {fileID: 3735509334511300585}
   rb: {fileID: 5746562870069731779}
