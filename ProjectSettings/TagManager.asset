@@ -10,6 +10,7 @@ TagManager:
   - Poison
   - DeathTrigger
   - PoisonTrigger
+  - WinTrigger
   layers:
   - Default
   - TransparentFX

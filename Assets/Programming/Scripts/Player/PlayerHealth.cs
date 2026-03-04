@@ -29,8 +29,6 @@ public class PlayerHealth : MonoBehaviour, IDamagable
 
     private void Start()
     {
-        gameOverScreen.gameObject.SetActive(false);
-
         currentHealth = maxHealth;
 
         healthSlider.maxValue = maxHealth;
