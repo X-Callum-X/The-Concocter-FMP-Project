@@ -2865,10 +2865,6 @@ PrefabInstance:
       value: Chaser Enemy
       objectReference: {fileID: 0}
     - target: {fileID: 4632875732126208238, guid: ecf10e9d4c9338447ae4092274ab3b9f, type: 3}
-      propertyPath: speed
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 4632875732126208238, guid: ecf10e9d4c9338447ae4092274ab3b9f, type: 3}
       propertyPath: player
       value: 
       objectReference: {fileID: 1790005983}
