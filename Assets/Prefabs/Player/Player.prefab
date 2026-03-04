@@ -129,15 +129,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   debuffUI: {fileID: 0}
+  winScreen: {fileID: 0}
   moveSpeed: 10
   groundDrag: 10
-  jumpForce: 30
+  jumpForce: 20
   jumpCooldown: 0
-  airMultiplier: 1
+  airMultiplier: 0
   walkSpeed: 0
   sprintSpeed: 0
   jumpKey: 32
-  playerHeight: 2
+  playerHeight: 1
   whatIsGround:
     serializedVersion: 2
     m_Bits: 64

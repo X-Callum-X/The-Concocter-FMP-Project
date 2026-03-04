@@ -3,9 +3,10 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    [Header("References")]
     private PlayerGrappling grappling;
-
     public DebuffUIController debuffUI;
+    public GameObject winScreen;
 
     [Header("Movement")]
     public float moveSpeed;
@@ -163,12 +164,27 @@ public class PlayerMovement : MonoBehaviour
         canJump = true;
     }
 
+    private void Win()
+    {
+        Time.timeScale = 0;
+
+        winScreen.gameObject.SetActive(true);
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("PoisonTrigger"))
         {
             jumpForce = jumpForce / 2;
             moveSpeed = moveSpeed / 2;
+        }
+
+        if (other.gameObject.CompareTag("WinTrigger"))
+        {
+            Win();
         }
     }
 
