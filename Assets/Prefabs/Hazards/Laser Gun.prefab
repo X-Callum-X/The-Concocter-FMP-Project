@@ -852,7 +852,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7387980314400834005}
-  - component: {fileID: 4262346179363650200}
   m_Layer: 0
   m_Name: Barrel Holder
   m_TagString: Untagged
@@ -876,27 +875,6 @@ Transform:
   - {fileID: 6553896184254635623}
   m_Father: {fileID: 2610478604684474332}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4262346179363650200
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4205476726417428769}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e47f20ad56f2065428737a50d568f005, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ShootLaser
-  player: {fileID: 0}
-  warningBeam: {fileID: 1170925400475100589}
-  laserBeam: {fileID: 3103232073897647888}
-  attackDuration: 2
-  timeBetweenAttacks: 2
-  attackRange: 15
-  whatIsPlayer:
-    serializedVersion: 2
-    m_Bits: 512
 --- !u!1 &6701460575435331501
 GameObject:
   m_ObjectHideFlags: 0
@@ -906,6 +884,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2610478604684474332}
+  - component: {fileID: 3374229338682963744}
   m_Layer: 0
   m_Name: Laser Gun
   m_TagString: Untagged
@@ -930,3 +909,23 @@ Transform:
   - {fileID: 7387980314400834005}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3374229338682963744
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6701460575435331501}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f63445f2509bc68419056bb918e75d36, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ElectricBeam
+  player: {fileID: 0}
+  warningBeam: {fileID: 1170925400475100589}
+  laserBeam: {fileID: 3103232073897647888}
+  attackDuration: 2
+  timeBetweenAttacks: 2
+  whatIsPlayer:
+    serializedVersion: 2
+    m_Bits: 512
