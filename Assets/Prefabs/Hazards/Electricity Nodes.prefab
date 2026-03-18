@@ -499,8 +499,8 @@ MonoBehaviour:
   player: {fileID: 0}
   warningBeam: {fileID: 1690856614420434727}
   laserBeam: {fileID: 5239690552837589084}
-  attackDuration: 2
-  timeBetweenAttacks: 2
+  attackDuration: 1
+  timeBetweenAttacks: 1
   whatIsPlayer:
     serializedVersion: 2
     m_Bits: 512
