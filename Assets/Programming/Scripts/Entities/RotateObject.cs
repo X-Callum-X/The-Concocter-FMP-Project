@@ -10,17 +10,17 @@ public class RotateObject : MonoBehaviour
     {
         if (horizontal)
         {
-            gameObject.transform.Rotate(gameObject.transform.rotation.x, -0.5f, gameObject.transform.rotation.z);
+            gameObject.transform.Rotate(gameObject.transform.rotation.x, -90f * Time.deltaTime, gameObject.transform.rotation.z);
         }
         
         if (verticalLeft)
         {
-            gameObject.transform.Rotate(gameObject.transform.rotation.x, gameObject.transform.rotation.y, -0.5f);
+            gameObject.transform.Rotate(gameObject.transform.rotation.x, gameObject.transform.rotation.y, -90f * Time.deltaTime);
         }
 
         if (verticalRight)
         {
-            gameObject.transform.Rotate(-0.5f, gameObject.transform.rotation.y, gameObject.transform.rotation.z);
+            gameObject.transform.Rotate(-90f * Time.deltaTime, gameObject.transform.rotation.y, gameObject.transform.rotation.z);
         }
     }
 }
