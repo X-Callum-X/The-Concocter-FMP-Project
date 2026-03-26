@@ -5938,7 +5938,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &595402463
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9463,7 +9463,7 @@ Transform:
   m_GameObject: {fileID: 945762388}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0.9975796, z: -0, w: -0.06953404}
-  m_LocalPosition: {x: -2.6222281, y: 0.1, z: 15.314096}
+  m_LocalPosition: {x: -2.6222281, y: 0.93399996, z: 15.314096}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -9515,8 +9515,10 @@ MonoBehaviour:
   - We're in trouble!
   - The Concocter is at his tricks again, and is taking our energy to form his army!
   - You are the only one strong enough to take him on and save us!
-  - His tower is just down that path.
-  - Good luck!
+  - His tower is not easy to pass through, either.
+  - You'll need to use your grapple hook to avoid obstacles and his army members.
+    Just hold left click to use it!
+  - The tower is just down this path. Good luck!
   typeSpeed: 0.03
   whatIsPlayer:
     serializedVersion: 2
@@ -9747,7 +9749,7 @@ PrefabInstance:
       objectReference: {fileID: 637076651}
     - target: {fileID: 2092138621804123174, guid: c6eac1bc2d7ed9a499e16d613ee2ee13, type: 3}
       propertyPath: moveSpeed
-      value: 15
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2092138621804123174, guid: c6eac1bc2d7ed9a499e16d613ee2ee13, type: 3}
       propertyPath: winScreen
@@ -9767,7 +9769,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6665999059295451924, guid: c6eac1bc2d7ed9a499e16d613ee2ee13, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.7660001
+      value: 1.6
       objectReference: {fileID: 0}
     - target: {fileID: 6665999059295451924, guid: c6eac1bc2d7ed9a499e16d613ee2ee13, type: 3}
       propertyPath: m_LocalPosition.z
@@ -10314,7 +10316,7 @@ Transform:
   m_GameObject: {fileID: 1129895499}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.83399993, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
