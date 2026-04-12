@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.ProBuilder;
-using UnityEngine.Rendering;
+using UnityEngine.UI;
+using System.Collections;
 
 public class BossAI : MonoBehaviour, IDamagable
 {
@@ -10,24 +10,21 @@ public class BossAI : MonoBehaviour, IDamagable
 
     public LayerMask whatIsPlayer;
 
+    public GameObject winScreen;
+
     [Header("Variables")]
-    public float health;
+    public Slider healthSlider;
+
+    public float currentHealth;
     public float maxHealth;
 
-    public float damage;
-    public float sightRange;
-
-    public int phaseCount;
-
     private float attackCooldown;
-    public int timeBetweenAttacks;
-
-    public int numberOfEnemiesToSpawn;
+    public float timeBetweenAttacks;
 
     public Transform player;
 
-    private bool playerInAttackRange;
     private bool canAttack;
+    private bool isDead;
 
     public GameObject flame;
     public GameObject shootingPoint;
@@ -39,14 +36,22 @@ public class BossAI : MonoBehaviour, IDamagable
         player = GameObject.Find("Player").transform;
         agent = GetComponent<NavMeshAgent>();
 
-        health = maxHealth;
+        currentHealth = maxHealth;
+
+        healthSlider.maxValue = maxHealth;
+        healthSlider.value = maxHealth;
     }
 
     private void Update()
     {
-        playerInAttackRange = Physics.CheckSphere(transform.position, sightRange, whatIsPlayer);
+        if (currentHealth <= 0)
+        {
+            currentHealth = 0;
 
-        if (!canAttack)
+            Die();
+        }
+
+        if (!canAttack && !isDead)
         {
             attackCooldown += Time.deltaTime;
 
@@ -58,24 +63,14 @@ public class BossAI : MonoBehaviour, IDamagable
 
             Chase();
         }
-        else
+        else if (canAttack && !isDead)
         {
             Attack();
-        }
-
-        if (health > maxHealth / 2)
-        {
-            phaseCount = 1;
-        }
-        else
-        {
-            phaseCount = 2;
         }
     }
 
     private void Chase()
     {
-        Debug.Log("chase");
         agent.SetDestination(player.position);
 
         animator.Play("Walk");
@@ -83,10 +78,33 @@ public class BossAI : MonoBehaviour, IDamagable
 
     private void Attack()
     {
-        Debug.Log("attack");
         agent.SetDestination(transform.position);
 
         animator.Play("Attack");
+    }
+
+    private void TakeDamage(float damageTaken)
+    {
+        currentHealth -= damageTaken;
+
+        healthSlider.value = currentHealth;
+    }
+
+    private void Die()
+    {
+        isDead = true;
+        animator.Play("Death");
+
+        StartCoroutine(DelayWin());
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("BossDamageTrigger"))
+        {
+            Debug.Log("damage");
+            TakeDamage(1);
+        }
     }
 
     private void ThrowFlame()
@@ -103,19 +121,17 @@ public class BossAI : MonoBehaviour, IDamagable
         canAttack = false;
     }
 
-    private void TakeDamage(float damageTaken)
+    private IEnumerator DelayWin()
     {
-        health -= damageTaken;
-    }
+        Debug.Log("You Win");
 
-    private void Die()
-    {
-        
-    }
+        yield return new WaitForSeconds(1.5f);
 
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, sightRange);
+        winScreen.gameObject.SetActive(true);
+
+        Time.timeScale = 0f;
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 }

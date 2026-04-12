@@ -121,7 +121,7 @@ public class PlayerHealth : MonoBehaviour, IDamagable
     {
         if (other.gameObject.CompareTag("FireTrigger"))
         {
-            StartCoroutine(FireDamage(5, 1));
+            StartCoroutine(FireDamage(15, 3));
         }
     }
 
