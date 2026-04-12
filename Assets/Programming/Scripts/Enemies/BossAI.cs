@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.ProBuilder;
+using UnityEngine.Rendering;
 
 public class BossAI : MonoBehaviour, IDamagable
 {
@@ -17,11 +19,20 @@ public class BossAI : MonoBehaviour, IDamagable
 
     public int phaseCount;
 
+    private float attackCooldown;
+    public int timeBetweenAttacks;
+
     public int numberOfEnemiesToSpawn;
 
     public Transform player;
 
     private bool playerInAttackRange;
+    private bool canAttack;
+
+    public GameObject flame;
+    public GameObject shootingPoint;
+
+    public Animator animator;
 
     private void Start()
     {
@@ -35,16 +46,24 @@ public class BossAI : MonoBehaviour, IDamagable
     {
         playerInAttackRange = Physics.CheckSphere(transform.position, sightRange, whatIsPlayer);
 
-        if (!playerInAttackRange)
+        if (!canAttack)
         {
+            attackCooldown += Time.deltaTime;
+
+            if (attackCooldown > timeBetweenAttacks)
+            {
+                attackCooldown = 0;
+                canAttack = true;
+            }
+
             Chase();
         }
         else
         {
-            AttackPhase();
+            Attack();
         }
 
-        if (health > maxHealth)
+        if (health > maxHealth / 2)
         {
             phaseCount = 1;
         }
@@ -56,31 +75,32 @@ public class BossAI : MonoBehaviour, IDamagable
 
     private void Chase()
     {
+        Debug.Log("chase");
         agent.SetDestination(player.position);
+
+        animator.Play("Walk");
     }
 
-    private void AttackPhase()
+    private void Attack()
     {
+        Debug.Log("attack");
         agent.SetDestination(transform.position);
 
-        if (phaseCount == 1)
-        {
-
-        }
-        else
-        {
-
-        }
+        animator.Play("Attack");
     }
 
-    private void PerformAttack()
+    private void ThrowFlame()
     {
+        Rigidbody rb = Instantiate(flame, shootingPoint.transform.position, Quaternion.identity).GetComponent<Rigidbody>();
 
+        rb.AddForce(transform.forward * 15f, ForceMode.Impulse);
+
+        Destroy(rb.gameObject, 3);
     }
 
-    private void SpawnEnemies()
+    private void ResetAttack()
     {
-
+        canAttack = false;
     }
 
     private void TakeDamage(float damageTaken)
@@ -92,7 +112,6 @@ public class BossAI : MonoBehaviour, IDamagable
     {
         
     }
-
 
     private void OnDrawGizmosSelected()
     {
