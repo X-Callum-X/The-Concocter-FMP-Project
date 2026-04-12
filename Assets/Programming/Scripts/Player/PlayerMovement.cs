@@ -94,11 +94,6 @@ public class PlayerMovement : MonoBehaviour
         {
             debuffUI.isOnIce = false;
         }
-    }
-
-    private void FixedUpdate()
-    {
-        MovePlayer();
 
         if (!canJump)
         {
@@ -106,6 +101,11 @@ public class PlayerMovement : MonoBehaviour
 
             Invoke(nameof(ResetJump), jumpCooldown);
         }
+    }
+
+    private void FixedUpdate()
+    {
+        MovePlayer();
     }
 
     private void PlayerInput()

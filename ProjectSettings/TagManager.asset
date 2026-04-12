@@ -11,6 +11,8 @@ TagManager:
   - DeathTrigger
   - PoisonTrigger
   - WinTrigger
+  - BossDamageTrigger
+  - BossPlatform
   layers:
   - Default
   - TransparentFX
