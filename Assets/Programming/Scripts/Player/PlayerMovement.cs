@@ -8,6 +8,8 @@ public class PlayerMovement : MonoBehaviour
     public DebuffUIController debuffUI;
     public GameObject winScreen;
 
+    public Vector3 placeToRespawn;
+
     [Header("Movement")]
     public float moveSpeed;
 
@@ -16,7 +18,9 @@ public class PlayerMovement : MonoBehaviour
     public float jumpForce;
     public float jumpCooldown;
     public float airMultiplier;
+
     bool canJump;
+    bool isDead;
 
     [HideInInspector] public float walkSpeed;
     [HideInInspector] public float sprintSpeed;
@@ -55,6 +59,8 @@ public class PlayerMovement : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+        placeToRespawn = this.transform.position;
     }
 
     private void Update()
@@ -166,7 +172,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Win()
     {
-        Time.timeScale = 0;
+        Time.timeScale = 0f;
 
         winScreen.gameObject.SetActive(true);
 
@@ -185,6 +191,11 @@ public class PlayerMovement : MonoBehaviour
         if (other.gameObject.CompareTag("WinTrigger"))
         {
             Win();
+        }
+
+        if (other.gameObject.CompareTag("Checkpoint"))
+        {
+            placeToRespawn = other.gameObject.transform.position;
         }
     }
 

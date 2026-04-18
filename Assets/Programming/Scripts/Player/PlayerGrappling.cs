@@ -10,6 +10,8 @@ public class PlayerGrappling : MonoBehaviour
     public PlayerMovement pm;
     public TMP_Text grappleNoUI;
 
+    private PlayerHealth playerHealth;
+
     [Header("Swinging")]
     private float maxSwingDistance = 25f;
     private Vector3 swingPoint;
@@ -17,6 +19,8 @@ public class PlayerGrappling : MonoBehaviour
 
     public float maxNoOfGrapples = 1;
     public float currentGrappleNo = 0;
+
+    private bool noSwing;
 
     [Header("OdmGear")]
     public Transform orientation;
@@ -34,6 +38,8 @@ public class PlayerGrappling : MonoBehaviour
 
     private void Start()
     {
+        playerHealth = GetComponent<PlayerHealth>();
+
         currentGrappleNo = maxNoOfGrapples;
 
         grappleNoUI.text = "Number Of Grapples: " + currentGrappleNo;
@@ -41,7 +47,7 @@ public class PlayerGrappling : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(swingKey) && currentGrappleNo > 0) StartSwing();
+        if (Input.GetKeyDown(swingKey) && currentGrappleNo > 0 && !playerHealth.isDead) StartSwing();
         if (Input.GetKeyUp(swingKey)) StopSwing();
 
         CheckForSwingPoints();
@@ -68,29 +74,26 @@ public class PlayerGrappling : MonoBehaviour
 
         Vector3 realHitPoint;
 
-        // Option 1 - Direct Hit
+        // Direct Hit
         if (raycastHit.point != Vector3.zero)
+        {
             realHitPoint = raycastHit.point;
+            noSwing = false;
+        }
 
-        // Option 2 - Indirect (predicted) Hit
+        // Indirect (predicted) Hit
         else if (sphereCastHit.point != Vector3.zero)
+        {
             realHitPoint = sphereCastHit.point;
+            noSwing = false;
+        }
 
-        // Option 3 - Miss
+        // Miss
         else
+        {
             realHitPoint = Vector3.zero;
-
-        //// realHitPoint found
-        //if (realHitPoint != Vector3.zero)
-        //{
-        //    predictionPoint.gameObject.SetActive(true);
-        //    predictionPoint.position = realHitPoint;
-        //}
-        //// realHitPoint not found
-        //else
-        //{
-        //    predictionPoint.gameObject.SetActive(false);
-        //}
+            noSwing = true;
+        }
 
         predictionHit = raycastHit.point == Vector3.zero ? sphereCastHit : raycastHit;
     }
@@ -98,7 +101,7 @@ public class PlayerGrappling : MonoBehaviour
 
     private void StartSwing()
     {
-        currentGrappleNo -= 1;
+        if (!noSwing) currentGrappleNo -= 1;
 
         if (!pm.grounded)
         {
@@ -107,10 +110,6 @@ public class PlayerGrappling : MonoBehaviour
 
         // return if predictionHit not found
         if (predictionHit.point == Vector3.zero) return;
-
-        // deactivate active grapple
-        //if (GetComponent<Grappling>() != null)
-        //    GetComponent<Grappling>().StopGrapple();
 
         swingPoint = predictionHit.point;
         joint = player.gameObject.AddComponent<SpringJoint>();
@@ -184,81 +183,3 @@ public class PlayerGrappling : MonoBehaviour
         lr.SetPosition(1, currentGrapplePosition);
     }
 }
-
-    //[Header("References")]
-    //private PlayerMovement pm;
-    //public Transform cam;
-    //public Transform gunTip;
-    //public LayerMask whatIsGrappleable;
-    //public LineRenderer lr;
-
-    //[Header("Grappling")]
-    //public float maxGrappleDistance;
-    //public float grappleDelay;
-
-    //private Vector3 grapplePoint;
-
-    //[Header("Cooldown")]
-    //public float grappleCooldown;
-    //public float cooldownTimer;
-
-    //[Header("Input")]
-    //public KeyCode grappleKey = KeyCode.Mouse0;
-
-    //private bool isGrappling;
-
-    //private void Start()
-    //{
-    //    pm = GetComponent<PlayerMovement>();
-    //}
-
-    //private void Update()
-    //{
-    //    if (Input.GetKeyDown(grappleKey)) StartGrapple();
-
-    //    if(cooldownTimer > 0) cooldownTimer -= Time.deltaTime;
-    //}
-
-    //private void LateUpdate()
-    //{
-    //    if(isGrappling) lr.SetPosition(0, gunTip.position);
-    //}
-
-    //private void StartGrapple()
-    //{
-    //    //if (cooldownTimer > 0) return;
-
-    //    isGrappling = true;
-
-    //    RaycastHit hit;
-
-    //    if (Physics.Raycast(cam.position, cam.forward, out hit, maxGrappleDistance, whatIsGrappleable))
-    //    {
-    //        grapplePoint = hit.point;
-
-    //        Invoke(nameof(ExecuteGrapple), grappleDelay);
-    //    }
-    //    else
-    //    {
-    //        grapplePoint = cam.position + cam.forward * maxGrappleDistance;
-
-    //        Invoke(nameof(StopGrapple), grappleDelay);
-    //    }
-
-    //    lr.enabled = true;
-    //    lr.SetPosition(1, grapplePoint);
-    //}
-
-    //private void ExecuteGrapple()
-    //{
-
-    //}
-
-    //private void StopGrapple()
-    //{
-    //    isGrappling = false;
-
-    //    cooldownTimer = grappleCooldown;
-
-    //    lr.enabled = false;
-    //}
