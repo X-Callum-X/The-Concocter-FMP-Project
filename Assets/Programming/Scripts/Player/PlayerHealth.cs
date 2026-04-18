@@ -16,16 +16,18 @@ public class PlayerHealth : MonoBehaviour, IDamagable
     public GameObject gameOverScreen;
 
     [Header("Variables")]
-    private float currentHealth = 100;
-    private float maxHealth = 100;
+    public float currentHealth = 100;
+    [HideInInspector] public float maxHealth = 100;
     
     [HideInInspector] public float damage = 5;
 
-    private bool Invincible = false;
+    private bool invincible = false;
 
     private float healTimer = 0;
 
     private bool pauseHealing = false;
+
+    public bool isDead;
 
     private void Start()
     {
@@ -40,11 +42,17 @@ public class PlayerHealth : MonoBehaviour, IDamagable
     {
         if (currentHealth <= 0)
         {
+            isDead = true;
+
             currentHealth = 0;
 
             UpdateHealthUI();
 
             Die();
+        }
+        else
+        {
+            isDead = false;
         }
 
         if (currentHealth > maxHealth) currentHealth = maxHealth;
@@ -82,15 +90,15 @@ public class PlayerHealth : MonoBehaviour, IDamagable
 
         UpdateHealthUI();
 
-        Time.timeScale = 0;
-
         gameOverScreen.gameObject.SetActive(true);
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+
+        Time.timeScale = 0f;
     }
 
-    private void UpdateHealthUI()
+    public void UpdateHealthUI()
     {
         healthText.text = currentHealth.ToString() + " / " + maxHealth.ToString();
 
@@ -165,9 +173,9 @@ public class PlayerHealth : MonoBehaviour, IDamagable
         float amountDamaged = 0;
         float damagePerLoop = damageAmount / duration;
 
-        while (amountDamaged < damageAmount && !Invincible)
+        while (amountDamaged < damageAmount && !invincible)
         {
-            Invincible = true;
+            invincible = true;
             debuffUI.isOnFire = true;
 
             currentHealth -= damagePerLoop;
@@ -177,7 +185,7 @@ public class PlayerHealth : MonoBehaviour, IDamagable
             UpdateHealthUI();
 
             yield return new WaitForSeconds(0.25f);
-            Invincible = false;
+            invincible = false;
         }
 
         if (amountDamaged == damageAmount)
