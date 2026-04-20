@@ -386,4 +386,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CheckpointController
   rotationSpeed: 200
-  collectEffect: {fileID: 0}
+  collectEffect: {fileID: 6460668723778391503, guid: e0aa373a636e90949ad37bc972e5187c, type: 3}
