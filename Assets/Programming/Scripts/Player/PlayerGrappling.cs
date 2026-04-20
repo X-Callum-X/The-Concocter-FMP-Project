@@ -22,7 +22,7 @@ public class PlayerGrappling : MonoBehaviour
 
     private bool noSwing;
 
-    [Header("OdmGear")]
+    [Header("Movement")]
     public Transform orientation;
     public Rigidbody rb;
     public float horizontalThrustForce;
@@ -52,7 +52,7 @@ public class PlayerGrappling : MonoBehaviour
 
         CheckForSwingPoints();
 
-        if (joint != null) OdmGearMovement();
+        if (joint != null) Movement();
     }
 
     private void LateUpdate()
@@ -138,7 +138,7 @@ public class PlayerGrappling : MonoBehaviour
         Destroy(joint);
     }
 
-    private void OdmGearMovement()
+    private void Movement()
     {
         // right
         if (Input.GetKey(KeyCode.D)) rb.AddForce(orientation.right * horizontalThrustForce * Time.deltaTime);
