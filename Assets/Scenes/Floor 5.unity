@@ -4226,7 +4226,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 233, y: 23, z: -58}
-  m_LocalScale: {x: 1, y: 7, z: 5}
+  m_LocalScale: {x: 1, y: 7, z: 7}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 731906278}
@@ -4277,7 +4277,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 66b5b1a5e48cdab4a96a22a467237968, type: 2}
+  - {fileID: 2100000, guid: 83cbb303cb1d88f4fb0b69ba4fe5bef8, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -6837,7 +6837,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3154761068278881282, guid: 2a6e776d0c2ed974d87e867063021280, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 26.895
+      value: 27.4
       objectReference: {fileID: 0}
     - target: {fileID: 3154761068278881282, guid: 2a6e776d0c2ed974d87e867063021280, type: 3}
       propertyPath: m_LocalPosition.z
@@ -16079,6 +16079,10 @@ PrefabInstance:
       propertyPath: gameOverScreen
       value: 
       objectReference: {fileID: 110621465}
+    - target: {fileID: 712687730550752644, guid: c6eac1bc2d7ed9a499e16d613ee2ee13, type: 3}
+      propertyPath: reticle
+      value: 
+      objectReference: {fileID: 2059270599}
     - target: {fileID: 712687730550752644, guid: c6eac1bc2d7ed9a499e16d613ee2ee13, type: 3}
       propertyPath: grappleNoUI
       value: 
