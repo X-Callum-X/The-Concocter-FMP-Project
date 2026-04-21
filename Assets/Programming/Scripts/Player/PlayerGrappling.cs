@@ -1,3 +1,4 @@
+using UnityEngine.UI;
 using UnityEngine;
 using TMPro;
 
@@ -11,6 +12,8 @@ public class PlayerGrappling : MonoBehaviour
     public TMP_Text grappleNoUI;
 
     private PlayerHealth playerHealth;
+
+    public Image reticle;
 
     [Header("Swinging")]
     private float maxSwingDistance = 25f;
@@ -62,7 +65,11 @@ public class PlayerGrappling : MonoBehaviour
 
     private void CheckForSwingPoints()
     {
-        if (joint != null) return;
+        if (joint != null)
+        {
+            reticle.GetComponent<Image>().color = new Color32(150, 150, 150, 100);
+            return;
+        }
 
         RaycastHit sphereCastHit;
         Physics.SphereCast(cam.position, predictionSphereCastRadius, cam.forward,
@@ -77,6 +84,7 @@ public class PlayerGrappling : MonoBehaviour
         // Direct Hit
         if (raycastHit.point != Vector3.zero)
         {
+            reticle.GetComponent<Image>().color = new Color32(255, 255, 255, 100);
             realHitPoint = raycastHit.point;
             noSwing = false;
         }
@@ -84,6 +92,7 @@ public class PlayerGrappling : MonoBehaviour
         // Indirect (predicted) Hit
         else if (sphereCastHit.point != Vector3.zero)
         {
+            reticle.GetComponent<Image>().color = new Color32(150, 150, 150, 100);
             realHitPoint = sphereCastHit.point;
             noSwing = false;
         }
