@@ -13,76 +13,71 @@ public class EnemyAI : MonoBehaviour
     public GameObject damageArea;
     public GameObject projectile;
 
-    public float timeBetweenAttacks;
+    private bool hasAttacked;
+    private bool performedAttack;
 
-    public bool hasAttacked;
-
-    public bool isMelee;
-    public bool isRanged;
+    public GameObject shootingPoint;
 
     [Header("Animation")]
 
-    public Animator chaseAnim;
-    public Animator attackAnim;
+    public Animator animator;
 
     private void Update()
     {
         playerInAttackRange = Physics.CheckSphere(transform.position, attackRange, whatIsPlayer);
 
-        if (!playerInAttackRange && !hasAttacked)
+        if (!playerInAttackRange && !hasAttacked && !performedAttack)
         {
             ChasePlayer();
         }
 
         else
         {
-            if (isMelee)
-            {
-                MeleeAttack();
-            }
-
-            else if (isRanged)
-            {
-                RangedAttack();
-            }
+            PerformAttack();
         }
     }
 
     private void ChasePlayer()
     {
+        animator.Play("Chase");
         transform.position = Vector3.MoveTowards(transform.position, player.position, speed * Time.deltaTime);
     }
      
-    private void MeleeAttack()
+    private void PerformAttack()
+    {
+        performedAttack = true;
+        animator.Play("Attack");
+    }
+
+    public void MeleeAttack()
     {
         if (!hasAttacked)
         {
             StartCoroutine(TriggerDamageArea());
 
             hasAttacked = true;
-
-            Invoke(nameof(ResetAttack), timeBetweenAttacks);
         }
     }
 
-    private void RangedAttack()
+    public void RangedAttack()
     {
         if (!hasAttacked)
         {
-            Rigidbody rb = Instantiate(projectile, transform.position, Quaternion.identity).GetComponent<Rigidbody>();
+            Rigidbody rb = Instantiate(projectile, shootingPoint.transform.position, Quaternion.identity).GetComponent<Rigidbody>();
 
             rb.AddForce(transform.forward * 15f, ForceMode.Impulse);
 
             Destroy(rb.gameObject, 3);
 
             hasAttacked = true;
-            Invoke(nameof(ResetAttack), timeBetweenAttacks);
         }
     }
 
-    private void ResetAttack()
+    public void ResetAttack()
     {
         hasAttacked = false;
+
+        performedAttack = false;
     }
 
     private IEnumerator TriggerDamageArea()
