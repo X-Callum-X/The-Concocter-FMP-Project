@@ -243,6 +243,8 @@ MonoBehaviour:
   collectEffect: {fileID: 6460668723778391503, guid: 9ef9fcebee38018409fbcca56b7e4029, type: 3}
   rotationSpeed: 200
   powerup: {fileID: 11400000, guid: 70c9c85b52902674580954c3c1dd3194, type: 2}
+  source: {fileID: 0}
+  collect: {fileID: 8300000, guid: acadcc359834f474883ee5d9cc617494, type: 3}
 --- !u!1 &1898536754864800863
 GameObject:
   m_ObjectHideFlags: 0

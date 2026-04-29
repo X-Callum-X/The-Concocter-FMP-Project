@@ -9,11 +9,13 @@ public class PlayerHealth : MonoBehaviour, IDamagable
     [Header("References")]
     public Slider healthSlider;
     public TMP_Text healthText;
-    public EnemyHealth enemy;
 
     public DebuffUIController debuffUI;
 
     public GameObject gameOverScreen;
+
+    public AudioSource source;
+    public AudioClip damageSFX;
 
     [Header("Variables")]
     public float currentHealth = 100;
@@ -78,6 +80,8 @@ public class PlayerHealth : MonoBehaviour, IDamagable
         currentHealth -= damage;
 
         UpdateHealthUI();
+
+        source.PlayOneShot(damageSFX);
 
         StartCoroutine(StopAndStartHealing());
     }
