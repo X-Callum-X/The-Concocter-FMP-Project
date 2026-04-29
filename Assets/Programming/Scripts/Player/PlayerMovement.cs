@@ -5,10 +5,15 @@ public class PlayerMovement : MonoBehaviour
 {
     [Header("References")]
     private PlayerGrappling grappling;
+    private PauseManager pauseManager;
     public DebuffUIController debuffUI;
     public GameObject winScreen;
 
     public Vector3 placeToRespawn;
+
+    public AudioSource source;
+    public AudioClip jump;
+    public AudioClip collect;
 
     [Header("Movement")]
     public float moveSpeed;
@@ -20,7 +25,6 @@ public class PlayerMovement : MonoBehaviour
     public float airMultiplier;
 
     bool canJump;
-    bool isDead;
 
     [HideInInspector] public float walkSpeed;
     [HideInInspector] public float sprintSpeed;
@@ -51,6 +55,7 @@ public class PlayerMovement : MonoBehaviour
     private void Start()
     {
         grappling = GetComponent<PlayerGrappling>();
+        pauseManager = FindFirstObjectByType<PauseManager>();
 
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
@@ -120,14 +125,18 @@ public class PlayerMovement : MonoBehaviour
         verticalInput = Input.GetAxisRaw("Vertical");
 
         // when to jump
-        if (Input.GetKeyDown(jumpKey) && canJump && grounded)
+        if (Input.GetKeyDown(jumpKey) && canJump && grounded && Time.deltaTime != 0)
         {
             canJump = false;
+
+            source.PlayOneShot(jump);
         }
 
         else if (Input.GetKeyDown(jumpKey) && canJump && onIce)
         {
             canJump = false;
+
+            source.PlayOneShot(jump);
         }
     }
 
@@ -196,6 +205,8 @@ public class PlayerMovement : MonoBehaviour
         if (other.gameObject.CompareTag("Checkpoint"))
         {
             placeToRespawn = other.gameObject.transform.position;
+
+            source.PlayOneShot(collect);
         }
     }
 

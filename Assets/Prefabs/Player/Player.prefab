@@ -130,6 +130,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   debuffUI: {fileID: 0}
   winScreen: {fileID: 0}
+  placeToRespawn: {x: 0, y: 0, z: 0}
+  source: {fileID: 0}
+  jump: {fileID: 8300000, guid: 93e98554d632ccd40b762bf772fd618b, type: 3}
+  damage: {fileID: 8300000, guid: 7e4ac473c52082746a0311fa01393670, type: 3}
+  collect: {fileID: 8300000, guid: acadcc359834f474883ee5d9cc617494, type: 3}
   moveSpeed: 10
   groundDrag: 10
   jumpForce: 20
@@ -170,6 +175,9 @@ MonoBehaviour:
     m_Bits: 192
   pm: {fileID: 2092138621804123174}
   grappleNoUI: {fileID: 0}
+  reticle: {fileID: 0}
+  source: {fileID: 0}
+  grapple: {fileID: 8300000, guid: 5760a363640fe7246a0155cc5a515884, type: 3}
   maxNoOfGrapples: 3
   currentGrappleNo: 0
   orientation: {fileID: 3735509334511300585}
@@ -193,10 +201,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
   healthSlider: {fileID: 0}
   healthText: {fileID: 0}
-  enemy: {fileID: 0}
   debuffUI: {fileID: 0}
   gameOverScreen: {fileID: 0}
+  source: {fileID: 0}
+  damageSFX: {fileID: 8300000, guid: 7e4ac473c52082746a0311fa01393670, type: 3}
+  currentHealth: 100
+  maxHealth: 100
   damage: 5
+  isDead: 0
 --- !u!1 &2158996877895103624
 GameObject:
   m_ObjectHideFlags: 0

@@ -13,7 +13,12 @@ public class PlayerGrappling : MonoBehaviour
 
     private PlayerHealth playerHealth;
 
+    private PauseManager pauseManager;
+
     public Image reticle;
+
+    public AudioSource source;
+    public AudioClip grapple;
 
     [Header("Swinging")]
     private float maxSwingDistance = 25f;
@@ -43,6 +48,8 @@ public class PlayerGrappling : MonoBehaviour
     {
         playerHealth = GetComponent<PlayerHealth>();
 
+        pauseManager = FindFirstObjectByType<PauseManager>();
+
         currentGrappleNo = maxNoOfGrapples;
 
         grappleNoUI.text = "Number Of Grapples: " + currentGrappleNo;
@@ -50,7 +57,7 @@ public class PlayerGrappling : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(swingKey) && currentGrappleNo > 0 && !playerHealth.isDead) StartSwing();
+        if (Input.GetKeyDown(swingKey) && currentGrappleNo > 0 && !playerHealth.isDead && Time.deltaTime != 0) StartSwing();
         if (Input.GetKeyUp(swingKey)) StopSwing();
 
         CheckForSwingPoints();
@@ -138,6 +145,8 @@ public class PlayerGrappling : MonoBehaviour
 
         lr.positionCount = 2;
         currentGrapplePosition = gunTip.position;
+
+        source.PlayOneShot(grapple);
     }
 
     public void StopSwing()

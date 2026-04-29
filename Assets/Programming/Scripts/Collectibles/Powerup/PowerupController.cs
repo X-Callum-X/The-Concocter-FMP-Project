@@ -11,6 +11,9 @@ public class PowerupController : MonoBehaviour
     [SerializeField] private float rotationSpeed;
     [SerializeField] private PowerupSO powerup;
 
+    public AudioSource source;
+    public AudioClip collect;
+
     private void Start()
     {
         playerHealth = FindFirstObjectByType<PlayerHealth>();
@@ -34,6 +37,8 @@ public class PowerupController : MonoBehaviour
             playerGrappling.maxNoOfGrapples += powerup.grappleCount;
 
             playerHealth.UpdateHealthUI();
+
+            source.PlayOneShot(collect);
 
             Destroy(this.gameObject);
         }

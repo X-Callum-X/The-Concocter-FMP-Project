@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PauseManager : MonoBehaviour
 {
-    private bool isPaused;
+    [HideInInspector] public bool isPaused;
 
     public GameObject pauseMenuObj;
 
@@ -13,7 +13,7 @@ public class PauseManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape) && !isPaused)
+        if (Input.GetKeyDown(KeyCode.Escape) && !isPaused && Time.deltaTime != 0)
         {
             PauseGame();
         }
@@ -28,6 +28,8 @@ public class PauseManager : MonoBehaviour
     {
         Time.timeScale = 0f;
 
+        isPaused = true;
+
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
@@ -37,6 +39,8 @@ public class PauseManager : MonoBehaviour
     public void UnpauseGame()
     {
         Time.timeScale = 1.0f;
+
+        isPaused = false;
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
